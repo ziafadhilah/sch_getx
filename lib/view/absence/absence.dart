@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sch/controllers/absence_controller.dart';
 import 'package:sch/controllers/profile_controller.dart';
 import 'package:sch/model/profile_model.dart';
 import 'package:sch/view/absence/absence_history.dart';
@@ -15,12 +16,14 @@ class AbsencePage extends StatefulWidget {
 
 class _AbsencePageState extends State<AbsencePage> {
   final ProfileController _profileController = Get.put(ProfileController());
+  final AbsenceController _absenceController = Get.put(AbsenceController());
 
   String imageUrl = 'https://smpn1sumber-153.com/uploads/images';
 
   @override
   void initState() {
     super.initState();
+    // _profileController.fetchProfile();
   }
 
   @override
@@ -54,8 +57,15 @@ class _AbsencePageState extends State<AbsencePage> {
                             _profileController.childrens[index];
                         return InkWell(
                           onTap: () {
-                            Get.to(AbsenceHistoryPage(),
-                                arguments: child.srstudentId);
+                            DateTime lastDate =
+                                _absenceController.getLastAttendanceDate();
+                            Get.to(
+                              AbsenceHistoryPage(),
+                              arguments: {
+                                'srstudentId': child.srstudentId,
+                                'selectedDate': lastDate,
+                              },
+                            );
                           },
                           child: Stack(
                             children: [

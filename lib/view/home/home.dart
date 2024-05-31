@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sch/controllers/absence_controller.dart';
 import 'package:sch/controllers/announcement_controller.dart';
 import 'package:sch/controllers/profile_controller.dart';
 import 'package:sch/model/announcement_model.dart';
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   final ProfileController _profileController = ProfileController();
   final AnnouncementController _announcementController =
       Get.put(AnnouncementController());
+  final AbsenceController _absenceController = Get.put(AbsenceController());
 
   List<String> videos = [
     'youtu.be/yHH5MBHRGiA',
@@ -550,8 +552,15 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.all(5.0),
                         child: InkWell(
                           onTap: () {
-                            Get.to(AbsenceHistoryPage(),
-                                arguments: child.srstudentId);
+                            DateTime lastDate =
+                                _absenceController.getLastAttendanceDate();
+                            Get.to(
+                              AbsenceHistoryPage(),
+                              arguments: {
+                                'srstudentId': child.srstudentId,
+                                'selectedDate': lastDate,
+                              },
+                            );
                           },
                           child: Container(
                             width: 350,

@@ -1,6 +1,8 @@
-// ignore_for_file: avoid_print, no_leading_underscores_for_local_identifiers, depend_on_referenced_packages
+// ignore_for_file: avoid_print, no_leading_underscores_for_local_identifiers, depend_on_referenced_packages, unnecessary_new
 
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:sch/services/http_services.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ProfileController extends GetxController {
   String? errorMessage;
@@ -37,7 +40,7 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // fetchProfile();
+    fetchProfile();
   }
 
   Future<void> fetchProfile() async {
@@ -248,16 +251,21 @@ class ProfileController extends GetxController {
           'https://smpn1sumber-153.com/api/v10/profile/photoupload/$usertypeID/$username');
       final token = await _loginController.getToken();
 
-      var request = new http.MultipartRequest('POST', url);
+      var request = http.MultipartRequest('POST', url);
       request.headers.addAll({
         'Authorization': 'Bearer $token',
+        'Content-Type': 'multipart/form-data',
       });
 
       if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
+        // Kompres gambar sebelum mengunggah
+        File compressedImage = await compressImage(File(imagePath));
+
         var file = await http.MultipartFile.fromPath(
           'photo',
-          imagePath,
-          contentType: MediaType.parse('image/${getFileExtension(imagePath)}'),
+          compressedImage.path,
+          contentType: MediaType.parse(
+              'image/${getFileExtension(compressedImage.path)}'),
         );
         request.files.add(file);
       } else {
@@ -276,7 +284,7 @@ class ProfileController extends GetxController {
         return true;
       } else {
         final responseData = jsonDecode(response.body);
-        errorMessage = responseData['message'];
+        String errorMessage = responseData['message'];
         Get.snackbar(
           'Error',
           'Error uploading image: ${response.statusCode}',
@@ -294,6 +302,23 @@ class ProfileController extends GetxController {
     }
   }
 
+  Future<File> compressImage(File file) async {
+    final Uint8List imageBytes = await file.readAsBytes();
+    final ui.Codec codec =
+        await ui.instantiateImageCodec(imageBytes, targetWidth: 600);
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+    final ui.Image image = frameInfo.image;
+    final ByteData? byteData =
+        await image.toByteData(format: ui.ImageByteFormat.png);
+    final Uint8List compressedBytes = byteData!.buffer.asUint8List();
+
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File('${tempDir.path}/temp_image.png');
+    await tempFile.writeAsBytes(compressedBytes);
+
+    return tempFile;
+  }
+
   Future<bool> uploadImageChildren({
     required String usertypeID,
     required String username,
@@ -308,13 +333,17 @@ class ProfileController extends GetxController {
       var request = new http.MultipartRequest('POST', url);
       request.headers.addAll({
         'Authorization': 'Bearer $token',
+        'Content-Type': 'multipart/form-data',
       });
 
       if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
+        File compressedImage = await compressImage(File(imagePath));
+
         var file = await http.MultipartFile.fromPath(
           'photo',
-          imagePath,
-          contentType: MediaType.parse('image/${getFileExtension(imagePath)}'),
+          compressedImage.path,
+          contentType: MediaType.parse(
+              'image/${getFileExtension(compressedImage.path)}'),
         );
         request.files.add(file);
       } else {

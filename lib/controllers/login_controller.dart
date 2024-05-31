@@ -22,10 +22,12 @@ class LoginController {
         prefs.setString('auth_token', token);
         Get.snackbar('Alert', 'Login Sukses', snackPosition: SnackPosition.TOP);
       } else {
+        Get.snackbar('Alert', 'Login Gagal, User atau Password salah.',
+            snackPosition: SnackPosition.TOP);
         throw Exception('Gagal Login');
       }
     } catch (e) {
-      throw Exception('Gagal Login');
+      throw Exception(e);
     }
   }
 

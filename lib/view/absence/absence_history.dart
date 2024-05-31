@@ -17,7 +17,7 @@ class AbsenceHistoryPage extends StatefulWidget {
 class _AbsenceHistoryPageState extends State<AbsenceHistoryPage> {
   final AbsenceController _absenceController = Get.put(AbsenceController());
   String imageUrl = 'https://smpn1sumber-153.com/uploads/images';
-  late DateTime selectedDate = DateTime.now();
+  late DateTime selectedDate;
   final DateTime lastDate = DateTime.now();
 
   final args = Get.arguments;
@@ -25,11 +25,12 @@ class _AbsenceHistoryPageState extends State<AbsenceHistoryPage> {
   @override
   void initState() {
     super.initState();
+    selectedDate = args['selectedDate'];
   }
 
   Widget _buildFilteredData() {
-    if (args != null && args is String) {
-      final String srstudentId = args;
+    if (args != null && args is Map<String, dynamic>) {
+      final String srstudentId = args['srstudentId'];
       return GetBuilder<AbsenceController>(
         init: AbsenceController(),
         builder: (controller) {
@@ -58,7 +59,6 @@ class _AbsenceHistoryPageState extends State<AbsenceHistoryPage> {
                       children: [
                         Container(
                           padding: const EdgeInsets.only(
-                            // top: 8.0,
                             right: 10,
                             left: 10,
                           ),
@@ -146,8 +146,8 @@ class _AbsenceHistoryPageState extends State<AbsenceHistoryPage> {
   }
 
   Widget _buildHistoryData() {
-    if (args != null && args is String) {
-      final String srstudentId = args;
+    if (args != null && args is Map<String, dynamic>) {
+      final String srstudentId = args['srstudentId'];
       return Obx(
         () => _absenceController.isLoading.value
             ? Center(
@@ -201,12 +201,10 @@ class _AbsenceHistoryPageState extends State<AbsenceHistoryPage> {
                               children: [
                                 Container(
                                   alignment: Alignment.center,
-                                  // color: Colors.green,
                                   width: 80,
                                   child: Text(formattedDatetime),
                                 ),
                                 Container(
-                                  // color: Colors.blue,
                                   width: 150,
                                   padding: EdgeInsets.only(left: 5),
                                   child: Column(
@@ -229,7 +227,6 @@ class _AbsenceHistoryPageState extends State<AbsenceHistoryPage> {
                                   ),
                                 ),
                                 Container(
-                                  // color: Colors.yellow,
                                   width: 100,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,

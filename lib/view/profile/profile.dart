@@ -25,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _profileController.refreshProfile();
+    // _profileController.refreshProfile();
   }
 
   void _showImageOptionsDialog(ProfileItem profile) {

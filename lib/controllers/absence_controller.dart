@@ -48,4 +48,16 @@ class AbsenceController extends GetxController {
           snackPosition: SnackPosition.TOP);
     }
   }
+
+  DateTime getLastAttendanceDate() {
+    DateTime today = DateTime.now();
+    DateTime todayAttendance = attendance.map((e) => e.datetime).firstWhere(
+        (date) =>
+            date.year == today.year &&
+            date.month == today.month &&
+            date.day == today.day,
+        orElse: () => today);
+
+    return todayAttendance;
+  }
 }
