@@ -18,7 +18,7 @@ class DetailProfileChildrenPage extends StatefulWidget {
 }
 
 class _DetailProfileChildrenPageState extends State<DetailProfileChildrenPage> {
-  final String imageUrl = 'https://smpn1sumber-153.com/uploads/images';
+  final String imageUrl = 'https://sch.sindigilive.com/uploads/images';
   final ProfileController _profileController = Get.put(ProfileController());
 
   late TextEditingController childDobController;

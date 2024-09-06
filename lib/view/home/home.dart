@@ -7,9 +7,11 @@ import 'package:get/get.dart';
 import 'package:sch/controllers/absence_controller.dart';
 import 'package:sch/controllers/announcement_controller.dart';
 import 'package:sch/controllers/profile_controller.dart';
+import 'package:sch/controllers/video_controller.dart';
 import 'package:sch/model/announcement_model.dart';
 import 'package:sch/model/login_model.dart';
 import 'package:sch/model/profile_model.dart';
+import 'package:sch/model/video_model.dart';
 import 'package:sch/view/absence/absence_history.dart';
 import 'package:sch/view/profile/detail_profile_children.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,12 +30,9 @@ class _HomePageState extends State<HomePage> {
   final AnnouncementController _announcementController =
       Get.put(AnnouncementController());
   final AbsenceController _absenceController = Get.put(AbsenceController());
+  final VideoController _videoController = Get.put(VideoController());
 
-  List<String> videos = [
-    'youtu.be/yHH5MBHRGiA',
-    // 'Video 2',
-  ];
-  String imageUrl = 'https://smpn1sumber-153.com/uploads/images';
+  String imageUrl = 'https://sch.sindigilive.com/uploads/images';
 
   String _getTimeElapsed(DateTime createDate) {
     final now = DateTime.now();
@@ -66,6 +65,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _announcementController.fetchAnnouncement();
     _profileController.fetchProfile();
+    _videoController.fetchVideo();
   }
 
   void _isRead(String noticeId) {
@@ -488,19 +488,22 @@ class _HomePageState extends State<HomePage> {
                             );
                     },
                   ),
-                  ListView.builder(
-                    itemCount: videos.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: TextButton(
-                          child: Text('Video Tutorial'),
-                          onPressed: () {
-                            launchBrowser(videos[index]);
-                          },
-                        ),
-                      );
-                    },
-                  ),
+                  Obx(() {
+                    return ListView.builder(
+                        itemCount: _videoController.videos.length,
+                        itemBuilder: (context, index) {
+                          VideoElement dataVids =
+                              _videoController.videos[index];
+                          return ListTile(
+                            title: TextButton(
+                              child: Text(dataVids.title),
+                              onPressed: () {
+                                launchBrowser(dataVids.url);
+                              },
+                            ),
+                          );
+                        });
+                  }),
                 ],
               ),
             )

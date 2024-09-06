@@ -2,8 +2,8 @@
 
 import 'package:http/http.dart' as http;
 
-// const urlBase = 'https://sch.sindigilive.com/api/v10';
-const urlBase = 'https://smpn1sumber-153.com/api/v10';
+const urlBase = 'https://sch.sindigilive.com/api/v10';
+// const urlBase = 'https://smpn1sumber-153.com/api/v10';
 
 class Request {
   late final String url;

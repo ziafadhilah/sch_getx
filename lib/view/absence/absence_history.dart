@@ -16,7 +16,7 @@ class AbsenceHistoryPage extends StatefulWidget {
 
 class _AbsenceHistoryPageState extends State<AbsenceHistoryPage> {
   final AbsenceController _absenceController = Get.put(AbsenceController());
-  String imageUrl = 'https://smpn1sumber-153.com/uploads/images';
+  String imageUrl = 'https://sch.sindigilive.com/uploads/images';
   late DateTime selectedDate;
   final DateTime lastDate = DateTime.now();
 

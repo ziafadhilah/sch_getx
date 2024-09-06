@@ -20,7 +20,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final ProfileController _profileController = Get.put(ProfileController());
   final LoginController _loginController = LoginController();
-  String imageUrl = 'https://smpn1sumber-153.com/uploads/images';
+  String imageUrl = 'https://sch.sindigilive.com/uploads/images';
 
   @override
   void initState() {

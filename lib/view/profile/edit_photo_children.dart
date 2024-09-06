@@ -17,7 +17,7 @@ class EditPhotoPageChildren extends StatefulWidget {
 
 class _EditPhotoPageChildrenState extends State<EditPhotoPageChildren> {
   final Children children = Get.arguments as Children;
-  final String imageUrl = 'https://smpn1sumber-153.com/uploads/images';
+  final String imageUrl = 'https://sch.sindigilive.com/uploads/images';
   late String _imageUrl;
   final ImagePicker _picker = ImagePicker();
 

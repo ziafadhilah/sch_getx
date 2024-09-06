@@ -18,7 +18,7 @@ class _AbsencePageState extends State<AbsencePage> {
   final ProfileController _profileController = Get.put(ProfileController());
   final AbsenceController _absenceController = Get.put(AbsenceController());
 
-  String imageUrl = 'https://smpn1sumber-153.com/uploads/images';
+  String imageUrl = 'https://sch.sindigilive.com/uploads/images';
 
   @override
   void initState() {

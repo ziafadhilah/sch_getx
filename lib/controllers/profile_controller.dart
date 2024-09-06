@@ -248,7 +248,7 @@ class ProfileController extends GetxController {
     final LoginController _loginController = Get.put(LoginController());
     try {
       final url = Uri.parse(
-          'https://smpn1sumber-153.com/api/v10/profile/photoupload/$usertypeID/$username');
+          'https://sch.sindigilive.com/api/v10/profile/photoupload/$usertypeID/$username');
       final token = await _loginController.getToken();
 
       var request = http.MultipartRequest('POST', url);
@@ -327,7 +327,7 @@ class ProfileController extends GetxController {
     final LoginController _loginController = Get.put(LoginController());
     try {
       final url = Uri.parse(
-          'https://smpn1sumber-153.com/api/v10/profile/photoupload/$usertypeID/$username');
+          'https://sch.sindigilive.com/api/v10/profile/photoupload/$usertypeID/$username');
       final token = await _loginController.getToken();
 
       var request = new http.MultipartRequest('POST', url);
