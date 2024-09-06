@@ -29,6 +29,22 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     _versionController.fetchVersion();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool? rememberMe = prefs.getBool('remember_me');
+    final String? username = prefs.getString('username');
+    final String? password = prefs.getString('password');
+
+    if (rememberMe == true) {
+      setState(() {
+        _rememberMe = true;
+        _usernameController.text = username ?? '';
+        _passwordController.text = password ?? '';
+      });
+    }
   }
 
   void _login() async {
@@ -47,6 +63,12 @@ class _LoginState extends State<Login> {
       if (token != null) {
         if (_rememberMe) {
           prefs.setBool('remember_me', true);
+          prefs.setString('username', username);
+          prefs.setString('password', password);
+        } else {
+          prefs.setBool('remember_me', false);
+          prefs.remove('username');
+          prefs.remove('password');
         }
         Get.offAll(Dashboard());
       } else {

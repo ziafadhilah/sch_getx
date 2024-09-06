@@ -131,109 +131,118 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
       body: Obx(
         () => _announcementController.isLoading.value
             ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: _announcementController.notices.length,
-                itemBuilder: (context, index) {
-                  Notice notice = _announcementController.notices[index];
-                  final timeElapsed = _getTimeElapsed(notice.createDate);
-                  final dateString = _getDateString(notice.createDate);
-                  return FutureBuilder<bool>(
-                    future:
-                        _announcementController.isNoticeRead(notice.noticeId),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      }
-                      final isRead = snapshot.data ?? false;
-                      return ListTile(
-                        subtitle: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              notice.title,
-                              textAlign: TextAlign.justify,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Color(0xFF333333),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            HtmlWidget(
-                              notice.notice.substring(0, 15) + '...',
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            : _announcementController.notices.isEmpty
+                ? Center(
+                    child: Text(
+                      'Tidak ada pengumuman',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: _announcementController.notices.length,
+                    itemBuilder: (context, index) {
+                      Notice notice = _announcementController.notices[index];
+                      final timeElapsed = _getTimeElapsed(notice.createDate);
+                      final dateString = _getDateString(notice.createDate);
+                      return FutureBuilder<bool>(
+                        future: _announcementController
+                            .isNoticeRead(notice.noticeId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
+                          final isRead = snapshot.data ?? false;
+                          return ListTile(
+                            subtitle: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: isRead
-                                            ? 'Sudah dibaca '
-                                            : 'Belum dibaca ',
-                                        style: TextStyle(
-                                          color: isRead
-                                              ? Color(0xFF5B616E)
-                                              : Colors.green,
-                                        ),
-                                      ),
-                                      TextSpan(
+                                Text(
+                                  notice.title,
+                                  textAlign: TextAlign.justify,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color(0xFF333333),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                HtmlWidget(
+                                  notice.notice.substring(0, 15) + '...',
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
                                         children: [
-                                          WidgetSpan(
-                                            alignment:
-                                                PlaceholderAlignment.middle,
-                                            child: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 2),
-                                              width: 8,
-                                              height: 8,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: isRead
-                                                    ? Color(0xFF5B616E)
-                                                    : Colors.green,
+                                          TextSpan(
+                                            text: isRead
+                                                ? 'Sudah dibaca '
+                                                : 'Belum dibaca ',
+                                            style: TextStyle(
+                                              color: isRead
+                                                  ? Color(0xFF5B616E)
+                                                  : Colors.green,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                alignment:
+                                                    PlaceholderAlignment.middle,
+                                                child: Container(
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 2),
+                                                  width: 8,
+                                                  height: 8,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: isRead
+                                                        ? Color(0xFF5B616E)
+                                                        : Colors.green,
+                                                  ),
+                                                ),
                                               ),
+                                            ],
+                                          ),
+                                          TextSpan(
+                                            text: timeElapsed,
+                                            style: TextStyle(
+                                              color: isRead
+                                                  ? Color(0xFF5B616E)
+                                                  : Colors.green,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      TextSpan(
-                                        text: timeElapsed,
-                                        style: TextStyle(
-                                          color: isRead
-                                              ? Color(0xFF5B616E)
-                                              : Colors.green,
-                                        ),
+                                    ),
+                                    Text(
+                                      dateString,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: isRead
+                                            ? Color(0xFF5B616E)
+                                            : Colors.green,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  dateString,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: isRead
-                                        ? Color(0xFF5B616E)
-                                        : Colors.green,
-                                  ),
-                                ),
+                                Divider(),
                               ],
                             ),
-                            Divider(),
-                          ],
-                        ),
-                        onTap: () {
-                          _markAsRead(notice.noticeId);
-                          _showAnnouncementDetails(context, notice);
+                            onTap: () {
+                              _markAsRead(notice.noticeId);
+                              _showAnnouncementDetails(context, notice);
+                            },
+                          );
                         },
                       );
                     },
-                  );
-                },
-              ),
+                  ),
       ),
     );
   }
